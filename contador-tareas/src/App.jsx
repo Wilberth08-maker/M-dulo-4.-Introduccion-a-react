@@ -1,15 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import FilterPanel from './FilterPanel';
 
 function App() {
   const [tareas, setTareas] = useState([]);
   const [nuevaTarea, setNuevaTarea] = useState('');
   const [duracion, setDuracion] = useState('');
+  const [filtroDuracion, setFiltroDuracion] = useState('all');
 
   // Efecto secundario: Cargar tareas desde localStorage
   useEffect(() => {
     const tareasGuardadas = localStorage.getItem('tareas');
     if (tareasGuardadas) {
-      setTareas(JSON.parse(tareasGuardadas));
+      const tareasParseadas = JSON.parse(tareasGuardadas).map(tarea => ({
+        ...tarea,
+        duracion: parseInt(tarea.duracion)
+      }));
+      setTareas(tareasParseadas);
     }
   }, []);
 
@@ -32,7 +38,8 @@ function App() {
     if (nuevaTarea && duracion) {
       const nuevaTareaObj = {
         nombre: nuevaTarea,
-        duracion: parseInt(duracion)
+        duracion: parseInt(duracion),
+        fechaCreacion: new Date().toISOString()
       };
       localStorage.setItem('tareas', JSON.stringify([...tareas, nuevaTareaObj]));
       setTareas([...tareas, nuevaTareaObj]);
@@ -49,9 +56,20 @@ function App() {
     localStorage.setItem('tareas', JSON.stringify(nuevasTareas));
   };
 
+  // Función para filtrar las tareas según el filtro seleccionado
+  const tareasFiltradas = tareas.filter((tarea) => {
+    const cumpleDuracion = filtroDuracion === 'all' || tarea.duracion >= parseInt(filtroDuracion);
+    return cumpleDuracion;
+
+  });
+
   return (
     <div className="flex flex-col items-center gap-6 bg-gray-200 p-6 rounded-md w-full h-screen">
       <h1 className="text-2xl font-bold">Contador de Tareas</h1>
+      <FilterPanel 
+          filtroDuracion={filtroDuracion}
+          setFiltroDuracion={setFiltroDuracion}
+      />
       <div className="flex flex-col gap-2 w-full justify-center items-center bg-gray-100 p-4 rounded-md">
         <input 
           className="flex border-2 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 h-12 w-full"
@@ -71,8 +89,9 @@ function App() {
       </div>
 
       <h2 className="text-2xl font-bold">Tareas</h2>
+      {tareasFiltradas.length === 0 && <p>No hay tareas que coincidan con los filtros</p>}  
       <ul className="flex flex-col gap-2 w-full space-y-2">
-        {tareas.map((tarea, index) => (
+        {tareasFiltradas.map((tarea, index) => (
           <div key={index} className="flex items-center justify-between gap-2 p-2 rounded-md w-full">
             <li key={index} className="flex items-center justify-between gap-4 w-full bg-white p-4 rounded-md">
               {tarea.nombre}: {tarea.duracion} minutos
@@ -82,7 +101,7 @@ function App() {
         ))}
       </ul>
 
-      <h3 className="text-2xl font-bold">Total de tiempo: {tiempoTotal} minutos</h3>
+      <h3 className="text-2xl font-bold p-6 mb-6">Total de tiempo: {tiempoTotal} minutos</h3>
     </div>
   );
 }
