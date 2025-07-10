@@ -5,6 +5,14 @@ function App() {
   const [nuevaTarea, setNuevaTarea] = useState('');
   const [duracion, setDuracion] = useState('');
 
+  // Efecto secundario: Cargar tareas desde localStorage
+  useEffect(() => {
+    const tareasGuardadas = localStorage.getItem('tareas');
+    if (tareasGuardadas) {
+      setTareas(JSON.parse(tareasGuardadas));
+    }
+  }, []);
+
   // Cálculo de tiempo total optimizado con useMemo
   const tiempoTotal = useMemo(() => {
     console.log("Calculando tiempo total...");
@@ -14,6 +22,8 @@ function App() {
   // Efecto secundario: Actualizar el título del documento cada vez que cambia el tiempo total
   useEffect(() => {
     document.title = `Total: ${tiempoTotal} minutos`;
+    // Actualizar localStorage
+    localStorage.setItem('tiempoTotal', tiempoTotal);
   }, [tiempoTotal]);  // Se ejecuta cada vez que las tareas cambian
 
 
@@ -24,6 +34,7 @@ function App() {
         nombre: nuevaTarea,
         duracion: parseInt(duracion)
       };
+      localStorage.setItem('tareas', JSON.stringify([...tareas, nuevaTareaObj]));
       setTareas([...tareas, nuevaTareaObj]);
       setNuevaTarea('');
       setDuracion('');
@@ -34,6 +45,8 @@ function App() {
   const eliminarTarea = (index) => {
     const nuevasTareas = tareas.filter((_, i) => i !== index);
     setTareas(nuevasTareas);
+    // Actualizar localStorage
+    localStorage.setItem('tareas', JSON.stringify(nuevasTareas));
   };
 
   return (
@@ -57,7 +70,7 @@ function App() {
         <button className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200" onClick={agregarTarea}>Agregar tarea</button>
       </div>
 
-      <h2>Tareas</h2>
+      <h2 className="text-2xl font-bold">Tareas</h2>
       <ul className="flex flex-col gap-2 w-full space-y-2">
         {tareas.map((tarea, index) => (
           <div key={index} className="flex items-center justify-between gap-2 p-2 rounded-md w-full">
