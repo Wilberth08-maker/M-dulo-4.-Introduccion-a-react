@@ -3,6 +3,7 @@ body {
   padding: 0;
   margin: 0;
   box-sizing: content-box;
+  background: radial-gradient(ellipse at bottom, #0b0c28 0%, #000000 100%);
 };
 
 /*Configuración de tailwind*/
