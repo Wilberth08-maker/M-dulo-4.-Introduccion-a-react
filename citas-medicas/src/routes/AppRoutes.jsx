@@ -8,6 +8,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 const AppRoutes = () => (
     <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/citas" element={<Citas />} />
+        <Route path="/cita/:id" element={<CitaDetalle />} />
+        <Route path="*" element={<NotFound />} />
     </Routes>
 );
 
