@@ -2,8 +2,12 @@
 // - Routes: contenedor de todas las rutas
 // - Route: define una ruta individual
 // - Navigate: redirige a otra ruta si se cumple una condición
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route} from 'react-router-dom';
 // Importamos las "páginas" (componentes de rutas)
+import CitaDetalle from '@/pages/CitaDetalle';
+import Citas from '@/pages/Citas';
+import Home from '@/pages/Home';
+import NotFound from '@/pages/NotFound';
 
 
 const AppRoutes = () => (
