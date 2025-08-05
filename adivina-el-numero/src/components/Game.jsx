@@ -10,6 +10,7 @@ const Game = () => {
     const [guess, setGuess] = useState('');
     const [secretNumber, setSecretNumber] = useState(randomNumber())
     const [message, setMessage] = useState('');
+    const [attempts, setAttempts] = useState(0);
 
     const handleGuess = (e) => {
         e.preventDefault()
@@ -29,12 +30,15 @@ const Game = () => {
         else {
             setMessage('El número es menor')
         }
+
+        setAttempts(attempts + 1);
     }
     
     const restartGame = () => {
-        setSecretNumber(randomNumber())
-        setGuess('')
-        setMessage('')
+        setSecretNumber(randomNumber());
+        setGuess('');
+        setMessage('');
+        setAttempts(0);
     }
 
     return (
@@ -46,6 +50,7 @@ const Game = () => {
             </form>
             <Message text={message} className='p-4 text-gray-700'/>
             <RestartButton onClick={restartGame} className='mt-4'/>
+            <h2 className='pt-2 text-gray-300'>Intentos: {attempts} </h2>
         </div>
     )
 }
