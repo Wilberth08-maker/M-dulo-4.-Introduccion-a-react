@@ -4,7 +4,9 @@ import './App.css'
 function App() {
 
   return (
-    <CounterGame/>
+    <div className='p-8'>
+      <CounterGame/>
+    </div>
   )
 }
 
