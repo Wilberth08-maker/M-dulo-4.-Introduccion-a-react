@@ -71,7 +71,7 @@ function CounterGame() {
                 const parsed = JSON.parse(savedState);
                 dispatch({ type: "set", payload: parsed });
             } catch(error) {
-                console(error)
+                console.error(error)
             }
         }
         setInitialized(true);
